@@ -1,13 +1,18 @@
-import { UserMenu } from "@/components/layout/user-menu";
+import type { Profile } from "@/types/profile.types";
 
-export function Navbar() {
+import { UserMenu } from "@/components/layout/user-menu";
+import { Logo } from "@/components/shared/logo";
+
+export function Navbar({ profile }: { profile: Profile }) {
   return (
-    <header className="flex items-center justify-between border-b border-black/10 bg-white px-6 py-4">
-      <div>
-        <p className="text-sm text-slate-500">Panel administrativo</p>
-        <h2 className="text-base font-semibold">Shinkunosekai BO</h2>
+    <header className="flex items-center justify-between gap-4 border-b border-black/10 bg-white px-6 py-4">
+      <div className="space-y-1">
+        <Logo />
+        <p className="text-sm text-slate-500">
+          {profile.full_name ?? profile.email ?? "Administrador"}
+        </p>
       </div>
-      <UserMenu />
+      <UserMenu profile={profile} />
     </header>
   );
 }

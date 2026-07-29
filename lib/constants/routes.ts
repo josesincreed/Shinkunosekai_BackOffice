@@ -6,4 +6,5 @@ export const routes = {
   categories: "/categories",
   users: "/users",
   settings: "/settings",
+  authCallback: "/api/auth/callback",
 } as const;

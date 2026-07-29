@@ -1,18 +1,20 @@
 import Link from "next/link";
 
+import { routes } from "@/lib/constants/routes";
+
 const items = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/animes", label: "Animes" },
-  { href: "/categories", label: "Categorías" },
-  { href: "/users", label: "Usuarios" },
-  { href: "/settings", label: "Configuración" },
+  { href: routes.dashboard, label: "Dashboard" },
+  { href: routes.animes, label: "Animes" },
+  { href: routes.categories, label: "Categorías" },
+  { href: routes.users, label: "Usuarios" },
+  { href: routes.settings, label: "Configuración" },
 ];
 
 export function Sidebar() {
   return (
     <aside className="hidden w-64 border-r border-black/10 bg-white px-4 py-6 lg:block">
       <div className="mb-8">
-        <p className="text-lg font-semibold">Shinkunosekai BO</p>
+        <p className="text-lg font-semibold">Shinku no Sekai BO</p>
         <p className="text-sm text-slate-500">Anime admin</p>
       </div>
       <nav className="space-y-2">
