@@ -1,5 +1,1 @@
-import { z } from "zod";
-
-export const animeSchema = z.object({
-  title: z.string().min(1),
-});
+export * from "@/lib/validations/animes/anime.schema";

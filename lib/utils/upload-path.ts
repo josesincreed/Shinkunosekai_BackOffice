@@ -1,3 +1,3 @@
-export function getUploadPath(filename: string) {
-  return `uploads/${filename}`;
+export function getUploadPath(filename: string, folder = "uploads") {
+  return `${folder}/${filename}`;
 }

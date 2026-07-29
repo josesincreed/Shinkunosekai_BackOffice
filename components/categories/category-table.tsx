@@ -153,7 +153,7 @@ export function CategoryTable({
           ) : data.length === 0 ? (
             <EmptyState title="No hay categorías todavía." />
           ) : (
-            <div className="overflow-hidden rounded-lg border border-slate-200">
+            <div className="overflow-visible rounded-lg border border-slate-200">
               <Table>
                 <TableHeader>
                   {table.getHeaderGroups().map((headerGroup) => (

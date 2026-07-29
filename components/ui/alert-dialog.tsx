@@ -32,8 +32,11 @@ export function AlertDialog({
   }
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => onOpenChange(false)}>
-      <div className="w-full max-w-md rounded-2xl bg-white shadow-xl" onClick={(event) => event.stopPropagation()}>
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 p-4" onClick={() => onOpenChange(false)}>
+      <div
+        className="mx-auto my-8 flex w-full max-w-md flex-col overflow-hidden rounded-2xl bg-white shadow-xl"
+        onClick={(event) => event.stopPropagation()}
+      >
         {children}
       </div>
     </div>,

@@ -33,8 +33,11 @@ export function Dialog({
   }
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => onOpenChange(false)}>
-      <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl" onClick={(event) => event.stopPropagation()}>
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 p-4" onClick={() => onOpenChange(false)}>
+      <div
+        className="mx-auto my-8 flex w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white shadow-xl"
+        onClick={(event) => event.stopPropagation()}
+      >
         {children}
       </div>
     </div>,
@@ -55,7 +58,7 @@ export function DialogDescription({ className, ...props }: React.HTMLAttributes<
 }
 
 export function DialogContent({ className, children }: { className?: string; children: React.ReactNode }) {
-  return <div className={cn("p-6", className)}>{children}</div>;
+  return <div className={cn("max-h-[calc(100vh-10rem)] overflow-y-auto p-6", className)}>{children}</div>;
 }
 
 export function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

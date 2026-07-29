@@ -1,3 +1,1 @@
-export async function createAnimeAction() {
-  return { ok: true };
-}
+export * from "@/actions/animes/anime.actions";

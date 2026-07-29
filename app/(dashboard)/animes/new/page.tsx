@@ -1,8 +1,13 @@
-export default function NewAnimePage() {
-  return (
-    <section className="space-y-4">
-      <h1 className="text-3xl font-semibold">Nuevo anime</h1>
-      <p className="text-slate-600">Formulario para crear un anime.</p>
-    </section>
-  );
+import { AnimeRouteDialog } from "@/components/animes/anime-route-dialog";
+import { getCategories } from "@/lib/services/categories/category.service";
+
+export default async function NewAnimePage() {
+  const categories = await getCategories({
+    page: 1,
+    pageSize: 1000,
+    sortBy: "name",
+    sortDir: "asc",
+  });
+
+  return <AnimeRouteDialog mode="create" categories={categories.items} returnHref="/animes" />;
 }

@@ -1,5 +1,1 @@
-import { listAnimes } from "@/lib/repositories/anime.repository";
-
-export async function getAnimes() {
-  return listAnimes();
-}
+export * from "@/lib/services/animes/anime.service";
