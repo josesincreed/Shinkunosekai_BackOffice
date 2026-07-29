@@ -1,8 +1,9 @@
-export function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
+import slugify from "slugify";
+
+export function slugifyText(value: string) {
+  return slugify(value, {
+    lower: true,
+    strict: true,
+    trim: true,
+  });
 }

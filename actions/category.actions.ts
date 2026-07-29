@@ -1,3 +1,1 @@
-export async function createCategoryAction() {
-  return { ok: true };
-}
+export * from "@/actions/categories/category.actions";

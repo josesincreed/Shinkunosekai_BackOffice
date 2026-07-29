@@ -1,3 +1,1 @@
-export async function listCategories() {
-  return [];
-}
+export * from "@/lib/repositories/categories/category.repository";

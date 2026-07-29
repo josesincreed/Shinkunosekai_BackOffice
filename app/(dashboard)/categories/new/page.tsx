@@ -1,8 +1,11 @@
+import { CategoryRouteDialog } from "@/components/categories/category-route-dialog";
+
 export default function NewCategoryPage() {
+  // Route-driven modal: the dialog is the page content.
   return (
-    <section className="space-y-4">
-      <h1 className="text-3xl font-semibold">Nueva categoría</h1>
-      <p className="text-slate-600">Formulario para crear una categoría.</p>
-    </section>
+    <CategoryRouteDialog
+      mode="create"
+      returnHref="/categories"
+    />
   );
 }

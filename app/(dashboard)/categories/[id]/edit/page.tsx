@@ -1,8 +1,26 @@
-export default function EditCategoryPage({ params }: { params: { id: string } }) {
+import { notFound } from "next/navigation";
+
+import { CategoryRouteDialog } from "@/components/categories/category-route-dialog";
+import { getCategory } from "@/lib/services/categories/category.service";
+
+export default async function EditCategoryPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const category = await getCategory(id);
+
+  if (!category) {
+    notFound();
+  }
+
   return (
-    <section className="space-y-4">
-      <h1 className="text-3xl font-semibold">Editar categoría</h1>
-      <p className="text-slate-600">Edición del registro {params.id}.</p>
-    </section>
+    <CategoryRouteDialog
+      mode="edit"
+      category={category}
+      initialValues={{ name: category.name }}
+      returnHref={`/categories/${category.id}`}
+    />
   );
 }
