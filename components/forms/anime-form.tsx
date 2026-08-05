@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import { Check, ChevronDown, ImageUp, Loader2, Sparkles } from "lucide-react";
 
 import { uploadAnimeImageAction } from "@/actions/anime.actions";
@@ -65,7 +65,7 @@ export function AnimeForm({
   );
 
   const form = useForm<AnimeFormValues>({
-    resolver: zodResolver(animeFormSchema),
+    resolver: zodResolver(animeFormSchema) as Resolver<AnimeFormValues>,
     defaultValues,
   });
 

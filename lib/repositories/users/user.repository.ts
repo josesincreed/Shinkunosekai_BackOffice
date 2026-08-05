@@ -51,13 +51,11 @@ function applySearch<T>(query: T, search?: string): T {
   );
 }
 
-function applyFilters<T>(
+function applyFilters<T extends { eq(column: string, value: string | boolean): T }>(
   query: T,
   filters: { role?: string; status?: string },
 ): T {
-  let next = query as unknown as {
-    eq(column: string, value: string | boolean): T;
-  };
+  let next = query;
 
   if (filters.role && filters.role !== "all") {
     next = next.eq("role", filters.role);
@@ -67,7 +65,7 @@ function applyFilters<T>(
     next = next.eq("active", filters.status === "active");
   }
 
-  return next as T;
+  return next;
 }
 
 function buildStats(rows: Array<{ role: UserRole; active: boolean }>): UserStatsInternal {
