@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,7 +40,7 @@ type UserFormProps = CreateFormProps | EditFormProps;
 function CreateUserForm({ initialValues, onSubmit, onCancel }: CreateFormProps) {
   const [serverError, setServerError] = useState<string | null>(null);
   const form = useForm<UserCreateFormValues>({
-    resolver: zodResolver(userCreateFormSchema),
+    resolver: zodResolver(userCreateFormSchema) as Resolver<UserCreateFormValues>,
     defaultValues: {
       fullName: initialValues?.fullName ?? "",
       email: initialValues?.email ?? "",
@@ -134,7 +134,7 @@ function CreateUserForm({ initialValues, onSubmit, onCancel }: CreateFormProps) 
 function EditUserForm({ user, initialValues, onSubmit, onCancel }: EditFormProps) {
   const [serverError, setServerError] = useState<string | null>(null);
   const form = useForm<UserUpdateFormValues>({
-    resolver: zodResolver(userUpdateFormSchema),
+    resolver: zodResolver(userUpdateFormSchema) as Resolver<UserUpdateFormValues>,
     defaultValues: {
       fullName: initialValues?.fullName ?? user.full_name ?? "",
       role: initialValues?.role ?? user.role,
@@ -237,7 +237,4 @@ export function UserForm(props: UserFormProps) {
       onCancel={props.onCancel}
     />
   );
-}
-export function UserForm() {
-  return <form className="space-y-4" />;
 }

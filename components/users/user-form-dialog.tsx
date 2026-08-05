@@ -51,23 +51,37 @@ export function UserFormDialog({
     return result;
   };
 
-  return (
+  return mode === "create" ? (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogClose onClick={() => onOpenChange(false)} />
       <DialogHeader>
-        <DialogTitle>{mode === "create" ? "Nuevo usuario" : "Editar usuario"}</DialogTitle>
+        <DialogTitle>Nuevo usuario</DialogTitle>
         <DialogDescription>
-          {mode === "create"
-            ? "Crea un usuario del back office o un usuario web con permisos controlados."
-            : "Actualiza la información visible del usuario seleccionado."}
+          Crea un usuario del back office o un usuario web con permisos controlados.
         </DialogDescription>
       </DialogHeader>
       <DialogContent>
         <UserForm
-          mode={mode}
-          user={user ?? undefined}
+          mode="create"
+          initialValues={initialValues as Partial<UserCreateFormValues> | undefined}
+          onSubmit={submitCreate}
+          onCancel={() => onOpenChange(false)}
+        />
+      </DialogContent>
+    </Dialog>
+  ) : (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogClose onClick={() => onOpenChange(false)} />
+      <DialogHeader>
+        <DialogTitle>Editar usuario</DialogTitle>
+        <DialogDescription>Actualiza la información visible del usuario seleccionado.</DialogDescription>
+      </DialogHeader>
+      <DialogContent>
+        <UserForm
+          mode="edit"
+          user={user as UserRow}
           initialValues={initialValues as Partial<UserUpdateFormValues> | undefined}
-          onSubmit={mode === "create" ? submitCreate : submitEdit}
+          onSubmit={submitEdit}
           onCancel={() => onOpenChange(false)}
         />
       </DialogContent>
