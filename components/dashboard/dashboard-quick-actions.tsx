@@ -61,7 +61,7 @@ export function DashboardQuickActions() {
               <CardContent>
                 <Link
                   href={action.href}
-                  className="inline-flex h-9 items-center justify-center rounded-md bg-slate-900 px-4 text-sm font-medium text-white transition-colors hover:bg-slate-800"
+                  className="inline-flex h-9 items-center justify-center rounded-md bg-slate-900 px-4 text-sm font-medium !text-white transition-colors hover:bg-slate-800"
                 >
                   {action.cta}
                 </Link>
