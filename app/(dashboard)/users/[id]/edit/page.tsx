@@ -1,8 +1,40 @@
-export default function EditUserPage({ params }: { params: { id: string } }) {
+import { notFound, redirect } from "next/navigation";
+
+import { UserRouteDialog } from "@/components/users/user-route-dialog";
+import { routes } from "@/lib/constants/routes";
+import { getCurrentAuthContext } from "@/lib/services/auth.service";
+import { canManageUsers } from "@/lib/users/permissions";
+import { getUserService } from "@/lib/services/users/user.service";
+
+export default async function EditUserPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const authContext = await getCurrentAuthContext();
+
+  if (!authContext || !canManageUsers(authContext.profile.role)) {
+    redirect(routes.dashboard);
+  }
+
+  const { id } = await params;
+  const user = await getUserService(id);
+
+  if (!user) {
+    notFound();
+  }
+
   return (
-    <section className="space-y-4">
-      <h1 className="text-3xl font-semibold">Editar usuario</h1>
-      <p className="text-slate-600">Edición del registro {params.id}.</p>
-    </section>
+    <UserRouteDialog
+      mode="edit"
+      user={user}
+      initialValues={{
+        fullName: user.full_name ?? "",
+        role: user.role,
+        active: user.active,
+        avatarUrl: user.avatar_url ?? "",
+      }}
+      returnHref={`/users/${user.id}`}
+    />
   );
 }

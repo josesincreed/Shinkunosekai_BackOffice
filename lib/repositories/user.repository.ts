@@ -1,3 +1,1 @@
-export async function listUsers() {
-  return [];
-}
+export * from "@/lib/repositories/users/user.repository";

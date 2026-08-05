@@ -46,7 +46,19 @@ export function DropdownMenuContent({ children, className }: { children: React.R
   );
 }
 
-export function DropdownMenuItem({ children, onSelect, className, destructive }: { children: React.ReactNode; onSelect?: () => void; className?: string; destructive?: boolean }) {
+export function DropdownMenuItem({
+  children,
+  onSelect,
+  className,
+  destructive,
+  disabled,
+}: {
+  children: React.ReactNode;
+  onSelect?: () => void;
+  className?: string;
+  destructive?: boolean;
+  disabled?: boolean;
+}) {
   const context = React.useContext(DropdownMenuContext);
 
   return (
@@ -55,9 +67,12 @@ export function DropdownMenuItem({ children, onSelect, className, destructive }:
       className={cn(
         "flex w-full items-center rounded-sm px-2 py-2 text-left text-sm hover:bg-slate-50",
         destructive && "text-red-600 hover:bg-red-50",
+        disabled && "cursor-not-allowed opacity-50 hover:bg-transparent",
         className,
       )}
+      disabled={disabled}
       onClick={() => {
+        if (disabled) return;
         onSelect?.();
         context?.setOpen(false);
       }}
