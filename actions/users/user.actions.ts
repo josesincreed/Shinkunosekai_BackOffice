@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { routes } from "@/lib/constants/routes";
+import { storageBuckets } from "@/lib/constants/storage";
 import {
   UserServiceError,
   createUserService,
@@ -12,6 +13,7 @@ import {
   updateUserPasswordService,
   updateUserService,
 } from "@/lib/services/users/user.service";
+import { uploadFile } from "@/lib/services/upload.service";
 import {
   userCreateFormSchema,
   userIdSchema,
@@ -21,6 +23,7 @@ import {
   type UserPasswordFormValues,
   type UserUpdateFormValues,
 } from "@/lib/validations/users/user.schema";
+import type { ActionResult } from "@/types/api.types";
 import type { UserActionResult } from "@/types/user.types";
 
 function getErrorMessage(error: unknown) {
@@ -165,5 +168,31 @@ export async function toggleUserStatusAction(id: string): Promise<UserActionResu
     };
   } catch (error) {
     return { ok: false, error: getErrorMessage(error) };
+  }
+}
+
+export async function uploadUserAvatarAction(formData: FormData): Promise<ActionResult<string>> {
+  const file = formData.get("file");
+
+  if (!(file instanceof File)) {
+    return { ok: false, error: "Archivo inválido." };
+  }
+
+  try {
+    const result = await uploadFile({
+      file,
+      folder: `${storageBuckets.avatars}/users`,
+    });
+
+    return {
+      ok: true,
+      data: result.url,
+      message: "Avatar cargado correctamente.",
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : "No se pudo cargar el avatar.",
+    };
   }
 }

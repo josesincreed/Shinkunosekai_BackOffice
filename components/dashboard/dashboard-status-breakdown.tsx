@@ -7,17 +7,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { DashboardStatusCount } from "@/types/dashboard.types";
 
 const statusLabels: Record<DashboardStatusCount["status"], string> = {
-  ONGOING: "ONGOING",
-  FINISHED: "FINISHED",
-  UPCOMING: "UPCOMING",
-  HIATUS: "HIATUS",
+  ONGOING: "En emisión",
+  FINISHED: "Finalizado",
+  UPCOMING: "Próximamente",
+  HIATUS: "En pausa",
 };
 
 const statusTone: Record<DashboardStatusCount["status"], string> = {
   ONGOING: "bg-emerald-100 text-emerald-700",
   FINISHED: "bg-slate-100 text-slate-700",
   UPCOMING: "bg-amber-100 text-amber-700",
-  HIATUS: "bg-violet-100 text-violet-700",
+  HIATUS: "bg-slate-900 text-white",
 };
 
 export function DashboardStatusBreakdown({ statusCounts }: { statusCounts: DashboardStatusCount[] }) {
@@ -30,7 +30,7 @@ export function DashboardStatusBreakdown({ statusCounts }: { statusCounts: Dashb
         </CardHeader>
         <CardContent className="space-y-3">
           {statusCounts.map((item) => (
-            <div key={item.status} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-4 py-3">
+            <div key={item.status} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-slate-200 px-4 py-3">
               <Badge className={statusTone[item.status]}>{statusLabels[item.status]}</Badge>
               <span className="text-lg font-semibold text-slate-950">{item.count}</span>
             </div>

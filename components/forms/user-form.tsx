@@ -3,7 +3,9 @@
 import { useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type Resolver } from "react-hook-form";
+import { ImageUp, Loader2 } from "lucide-react";
 
+import { uploadUserAvatarAction } from "@/actions/user.actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -39,6 +41,8 @@ type UserFormProps = CreateFormProps | EditFormProps;
 
 function CreateUserForm({ initialValues, onSubmit, onCancel }: CreateFormProps) {
   const [serverError, setServerError] = useState<string | null>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const form = useForm<UserCreateFormValues>({
     resolver: zodResolver(userCreateFormSchema) as Resolver<UserCreateFormValues>,
     defaultValues: {
@@ -60,6 +64,7 @@ function CreateUserForm({ initialValues, onSubmit, onCancel }: CreateFormProps) 
   } = form;
 
   const active = watch("active");
+  const avatarUrl = watch("avatarUrl");
 
   const submit = async (values: UserCreateFormValues) => {
     setServerError(null);
@@ -68,6 +73,28 @@ function CreateUserForm({ initialValues, onSubmit, onCancel }: CreateFormProps) 
     if (!result.ok) {
       setServerError(result.error);
     }
+  };
+
+  const handleAvatarUpload = async (file: File | null) => {
+    if (!file) {
+      return;
+    }
+
+    setUploadingAvatar(true);
+    setUploadError(null);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const result = await uploadUserAvatarAction(formData);
+    setUploadingAvatar(false);
+
+    if (!result.ok) {
+      setUploadError(result.error);
+      return;
+    }
+
+    setValue("avatarUrl", result.data ?? "", { shouldDirty: true, shouldValidate: true });
   };
 
   return (
@@ -107,10 +134,16 @@ function CreateUserForm({ initialValues, onSubmit, onCancel }: CreateFormProps) 
             </div>
             <p className="text-xs text-slate-500">El usuario podrá iniciar sesión si tiene acceso al back office.</p>
           </div>
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="avatarUrl">Avatar URL</Label>
-            <Input id="avatarUrl" placeholder="https://..." autoComplete="off" {...register("avatarUrl")} />
-            {errors.avatarUrl ? <p className="text-xs text-red-600">{errors.avatarUrl.message}</p> : null}
+          <div className="space-y-3 md:col-span-2">
+            <input type="hidden" {...register("avatarUrl")} />
+            <AvatarUploadField
+              title="Avatar"
+              description="Sube una imagen para el avatar del usuario."
+              value={avatarUrl ?? ""}
+              uploading={uploadingAvatar}
+              error={uploadError ?? errors.avatarUrl?.message ?? null}
+              onUpload={handleAvatarUpload}
+            />
           </div>
         </div>
 
@@ -133,6 +166,8 @@ function CreateUserForm({ initialValues, onSubmit, onCancel }: CreateFormProps) 
 
 function EditUserForm({ user, initialValues, onSubmit, onCancel }: EditFormProps) {
   const [serverError, setServerError] = useState<string | null>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const form = useForm<UserUpdateFormValues>({
     resolver: zodResolver(userUpdateFormSchema) as Resolver<UserUpdateFormValues>,
     defaultValues: {
@@ -152,6 +187,7 @@ function EditUserForm({ user, initialValues, onSubmit, onCancel }: EditFormProps
   } = form;
 
   const active = watch("active");
+  const avatarUrl = watch("avatarUrl");
 
   const submit = async (values: UserUpdateFormValues) => {
     setServerError(null);
@@ -160,6 +196,28 @@ function EditUserForm({ user, initialValues, onSubmit, onCancel }: EditFormProps
     if (!result.ok) {
       setServerError(result.error);
     }
+  };
+
+  const handleAvatarUpload = async (file: File | null) => {
+    if (!file) {
+      return;
+    }
+
+    setUploadingAvatar(true);
+    setUploadError(null);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const result = await uploadUserAvatarAction(formData);
+    setUploadingAvatar(false);
+
+    if (!result.ok) {
+      setUploadError(result.error);
+      return;
+    }
+
+    setValue("avatarUrl", result.data ?? "", { shouldDirty: true, shouldValidate: true });
   };
 
   return (
@@ -196,10 +254,16 @@ function EditUserForm({ user, initialValues, onSubmit, onCancel }: EditFormProps
             </div>
             <p className="text-xs text-slate-500">Solo un administrador activo puede permanecer en el sistema.</p>
           </div>
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="avatarUrl">Avatar URL</Label>
-            <Input id="avatarUrl" placeholder="https://..." autoComplete="off" {...register("avatarUrl")} />
-            {errors.avatarUrl ? <p className="text-xs text-red-600">{errors.avatarUrl.message}</p> : null}
+          <div className="space-y-3 md:col-span-2">
+            <input type="hidden" {...register("avatarUrl")} />
+            <AvatarUploadField
+              title="Avatar"
+              description="Sube una imagen para el avatar del usuario."
+              value={avatarUrl ?? ""}
+              uploading={uploadingAvatar}
+              error={uploadError ?? errors.avatarUrl?.message ?? null}
+              onUpload={handleAvatarUpload}
+            />
           </div>
         </div>
 
@@ -236,5 +300,57 @@ export function UserForm(props: UserFormProps) {
       onSubmit={props.onSubmit}
       onCancel={props.onCancel}
     />
+  );
+}
+
+function AvatarUploadField({
+  title,
+  description,
+  value,
+  uploading,
+  error,
+  onUpload,
+}: {
+  title: string;
+  description: string;
+  value: string;
+  uploading: boolean;
+  error: string | null;
+  onUpload: (file: File | null) => void;
+}) {
+  return (
+    <div className="space-y-3 rounded-xl border border-slate-200 p-4">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <Label>{title}</Label>
+          <p className="text-xs text-slate-500">{description}</p>
+        </div>
+        <ImageUp className="h-4 w-4 text-slate-500" />
+      </div>
+
+      <Input
+        type="file"
+        accept="image/*"
+        disabled={uploading}
+        onChange={(event) => onUpload(event.target.files?.[0] ?? null)}
+      />
+
+      <div className="space-y-2">
+        {uploading ? (
+          <p className="flex items-center gap-2 text-xs text-slate-500">
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            Subiendo imagen...
+          </p>
+        ) : null}
+        {value ? (
+          <p className="truncate text-xs text-slate-500">
+            URL cargada: <span className="font-medium text-slate-700">{value}</span>
+          </p>
+        ) : (
+          <p className="text-xs text-slate-500">Aún no se ha cargado una imagen.</p>
+        )}
+        {error ? <p className="text-xs text-red-600">{error}</p> : null}
+      </div>
+    </div>
   );
 }

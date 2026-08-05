@@ -9,8 +9,8 @@ function StatusRow({ label, value }: { label: string; value: string | number | b
   const isBoolean = typeof value === "boolean";
 
   return (
-    <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-4 py-3">
-      <span className="text-sm text-slate-500">{label}</span>
+    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-slate-200 px-4 py-3">
+      <span className="min-w-0 text-sm text-slate-500">{label}</span>
       {isBoolean ? (
         <Badge variant={value ? "secondary" : "destructive"}>{value ? "Sí" : "No"}</Badge>
       ) : (
